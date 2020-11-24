@@ -167,14 +167,15 @@ int main()
     taia_uint(&deadline,300);
     taia_add(&deadline,&deadline,&stamp);
     iopause(iop,cnt,&deadline,&stamp);
-    for (i=0;i<cnt;i++)
+    for (i=0;i<cnt;i++) {
       if (iop[i].revents) {
-	len = socket_recv6(udp53[i],buf,sizeof buf,ip,&port,&ifid);
-	if (len < 0) continue;
-	if (!doit()) continue;
-	if (response_len > max_response_len) response_tc();
-	socket_send6(udp53[i],response,response_len,ip,port,ifid);
-	/* may block for buffer space; if it fails, too bad */
+        len = socket_recv6(udp53[i],buf,sizeof buf,ip,&port,&ifid);
+        if (len < 0) continue;
+        if (!doit()) continue;
+        if (response_len > max_response_len) response_tc();
+        socket_send6(udp53[i],response,response_len,ip,port,ifid);
+        /* may block for buffer space; if it fails, too bad */
       }
+    }
   }
 }
