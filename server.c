@@ -68,11 +68,15 @@ static int doit(void)
   if (!pos) goto NOQ;
 
   case_lowerb(q,dns_domain_length(q));
-  if (!respond(q,qtype,ip)) {
-    qlog(ip,port,header,q,qtype," - ");
-    return 0;
-  }
+  if (!respond(q,qtype,ip)) goto REFUSE;
+
   qlog(ip,port,header,q,qtype," + ");
+  return 1;
+
+  REFUSE:
+  response[3] &= ~15;
+  response[3] |= 5;
+  qlog(ip,port,header,q,qtype," - ");
   return 1;
 
   NOTIMP:
