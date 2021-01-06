@@ -21,6 +21,7 @@ use Crypt::OpenSSL::RSA;
 use MIME::Base64;
 
 $main::ttl = 432000;
+$main::now = time();
 %main::keys = ();
 %main::names = ();
 @main::zones = ();
@@ -35,6 +36,10 @@ while ($#ARGV >= 0) {
 	if ($#ARGV < 1) { &usage(); }
 	$main::ttl = $ARGV[1];
 	shift @ARGV;
+    } elsif ($ARGV[0] eq '-T') {
+        if ($#ARGV < 1) { &usage(); }
+        $main::now = $ARGV[1];
+        shift @ARGV;
     } elsif ($ARGV[0] eq '-g') {
 	if ($#ARGV != 5) { &usage(); }
 	&genkey($ARGV[1], $ARGV[2], $ARGV[3], $ARGV[4], $ARGV[5]);
@@ -46,7 +51,7 @@ while ($#ARGV >= 0) {
     shift @ARGV;
 }
 
-my $now = time();
+my $now = $main::now;
 while ($_ = <STDIN>) {
     s/\s+$//s;
     if (/^:[^:]*:(43|46|48|50|51|6528[12]):/) { next; }
